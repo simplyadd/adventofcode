@@ -1,8 +1,3 @@
-# Day 1
-# Get sum of calibration values in each line.
-# The calibration value can be found by combining the first and last 
-# digit (in that order) to form a single two-digit number.
-
 def main():
     calVals = []
     firstDigit, lastDigit, sum = 0, 0, 0
