@@ -1,3 +1,9 @@
+def getDigit(line: str) -> str:
+    for c in line:
+        if c.isnumeric() == True:
+            return c
+
+
 def main():
     calVals = []
     firstDigit, lastDigit, sum = 0, 0, 0
@@ -9,23 +15,18 @@ def main():
 
         if not line:
             break
-    
-        for i in line:
-            if i.isnumeric() == True:
-                firstDigit = str(i)
-                break
-        for j in reversed(line):
-            if j.isnumeric() == True:
-                lastDigit = str(j)
-                break
+        
+        firstDigit = getDigit(line)
+        lastDigit = getDigit(reversed(line))
+        
         #concat chars
         num = int(firstDigit + lastDigit)
 
         sum += num
         calVals.append(num)
-
     print(sum)
     file1.close()
+
 
 if __name__ == "__main__":
     main()
