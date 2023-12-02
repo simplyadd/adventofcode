@@ -17,10 +17,9 @@ def main():
         firstDigit = getDigit(line)
         lastDigit = getDigit(reversed(line))
         
-        #concat chars
-        num = int(firstDigit + lastDigit)
+        calVal = int(firstDigit + lastDigit)
 
-        sum += num
+        sum += calVal
     print(sum)
     file1.close()
 
