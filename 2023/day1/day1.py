@@ -5,11 +5,9 @@ def getDigit(line: str) -> str:
 
 
 def main():
-    calVals = []
     firstDigit, lastDigit, sum = 0, 0, 0
 
     file1 = open('input.txt', 'r')
-
     while True:
         line = file1.readline()
 
@@ -23,7 +21,6 @@ def main():
         num = int(firstDigit + lastDigit)
 
         sum += num
-        calVals.append(num)
     print(sum)
     file1.close()
 
