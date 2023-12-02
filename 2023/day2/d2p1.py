@@ -1,4 +1,5 @@
 import re
+import sys
 
 def main():
     sum = 0
@@ -6,9 +7,9 @@ def main():
                'green': 13,
                'blue': 14}
     
-    file1 = open('input.txt', 'r')
+    input = open(sys.argv[1], 'r')
     while True:
-        line = file1.readline()
+        line = input.readline()
         
         if not line:
             break
@@ -34,7 +35,7 @@ def main():
         #print('Game ' + str(gameID) + ': ' + str(flag))
 
     print(sum)
-    file1.close()
+    input.close()
 
 
 if __name__ == "__main__":
