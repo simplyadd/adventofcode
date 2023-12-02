@@ -1,6 +1,4 @@
-Day 1
-
-Get sum of calibration values in each line from the input.txt file.
+Day 1: Get sum of calibration values in each line from the input.txt file.
 
 The calibration value can be found by combining the first and last 
 digit (in that order) to form a single two-digit number.
