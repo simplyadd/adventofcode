@@ -10,7 +10,6 @@ def addCheckedPn(line: str, i: int, number: int) -> bool:
         c = line[i]
         
         global sum
-        global count
         if c == '.':
             return False
         elif c.isnumeric() is True:
@@ -54,7 +53,6 @@ def readLines(i: int):
 
 
 def main():
-    global count
     global threeLines
 
     try:
