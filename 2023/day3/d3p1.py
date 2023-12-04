@@ -1,26 +1,61 @@
 import re
 import sys
-from itertools import islice
+
+threeLines = ['', '', '']
+sum = 0
 
 
-def checkIfSymbol(line: str, i: int) -> bool:
+def addCheckedPn(line: str, i: int, number: int) -> bool:
     try:
         c = line[i]
-
+        
+        global sum
+        global count
         if c == '.':
             return False
         elif c.isnumeric() is True:
             return False
         else:
-            #print(' Tis the char: ' + c)
+            sum += number
             return True
     except:
         return False
 
 
+def readLines(i: int):
+    if i == 1:
+        prevLine = threeLines[i-1]
+        currLine = threeLines[i]
+        nextLine = threeLines[i+1]
+    else:
+        prevLine = threeLines[i-1]
+        currLine = threeLines[i]
+        nextLine = ''
+
+    for number in re.finditer(r'\d+', currLine):
+        lastIndex = len(currLine)-1
+        start = number.start()
+        end = number.end()
+        number = int(number.group())
+    
+        if start > 0:
+            start -= 1
+            if addCheckedPn(currLine, start, number) is True:
+                continue
+        if end < lastIndex:
+            if addCheckedPn(currLine, end, number) is True:
+                continue
+            end += 1
+        for i in range(start, end):
+            if addCheckedPn(prevLine, i, number) is True:
+                break
+            if addCheckedPn(nextLine, i, number) is True:
+                break
+
+
 def main():
-    sum = 0
-    threeLines = ['', '', '']
+    global count
+    global threeLines
 
     try:
         input = open(sys.argv[1], 'r')
@@ -31,60 +66,11 @@ def main():
         threeLines.append(line)
         threeLines.pop(0)
         
-        prevLine = threeLines[0]
-        currLine = threeLines[1]
-        nextLine = threeLines[2]
-        lastIndex = len(line)-1
+        #use threeLines[1] as current Line
+        readLines(1)
 
-        for number in re.finditer(r'\d+', currLine):
-            start = number.start()
-            end = number.end()
-            number = int(number.group())
-
-            #check before num
-            if start > 0:
-                start -= 1
-                if checkIfSymbol(currLine, start) is True:
-                    sum += number
-                    continue
-            #check after num
-            if end < lastIndex:
-                if checkIfSymbol(currLine, end) is True:
-                    sum += number
-                    continue
-                end += 1
-            #check previous and next lines
-            for i in range(start, end):
-                if checkIfSymbol(prevLine, i) is True:
-                    sum += number
-                    break
-                if checkIfSymbol(nextLine, i) is True:
-                    sum += number
-                    break
-
-    lastLine = threeLines[2]
-    for number in re.finditer(r'\d+', lastLine):
-        start = number.start()
-        end = number.end()
-        number = int(number.group())
-
-        #check before num
-        if start > 0:
-            start -= 1
-            if checkIfSymbol(lastLine, start) is True:
-                sum += number
-                continue
-        #check after num
-        if end < len(lastLine)-1:
-            if checkIfSymbol(lastLine, end) is True:
-                sum += number
-                continue
-            end += 1
-        #check previous line
-        for i in range(start, end):
-            if checkIfSymbol(threeLines[1], i) is True:
-                sum += number
-                break
+    #for last line (threeLines[2])
+    readLines(2)
 
     print(sum)
     input.close()
