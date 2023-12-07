@@ -20,7 +20,6 @@ def main():
   ts = getNums(ts)
   ds = getNums(ds)
   
-  
   for i, t in enumerate(ts):
     for ms in range(t):
       mm = (t-ms) * ms
@@ -32,9 +31,7 @@ def main():
         product *= totalWins
         break
   
-  print(ts, ds)
   print(product)
-  
 
 if __name__ == "__main__":
   main()
