@@ -2,13 +2,13 @@ import sys
 from collections import Counter
 
 handsList = {
-  5: [],
-  4: [],
-  6: [],
-  3: [],
-  2: [],
-  1: [],
-  0: []
+  5: [], #five of a kind
+  4: [], #four of a kind
+  6: [], #full house
+  3: [], #three of a kind
+  2: [], #two pair
+  1: [], #one pair
+  0: []  #high card
 }
 
 class Hand:
@@ -20,21 +20,17 @@ class Hand:
   
 def addToRank(type: int, cards: str, bid: str):
   global handsList
+  bid = int(bid)
   listLen = len(handsList[type])
-  bid  = int(bid)
   if listLen == 0:
     handsList[type].append(Hand(cards, bid))
     return
   
   i, j = 0, 0
-  #get starting index
   if cards[0].isalpha() is True:
     i = 0
-  elif int(cards[0]) > 5:
-    i = listLen/2
   else:
-    i = -1
-
+    i = int(listLen/2)
   
   while True:
     x = getNum(cards[j])
@@ -42,60 +38,65 @@ def addToRank(type: int, cards: str, bid: str):
     try:
       y0 = getNum(handsList[type][i-1].cards[j])
     except:
-      y0 = -1
+      y0 = 15
     try:
       y2 = getNum(handsList[type][i+1].cards[j])
     except:
-      y2 = 15
+      y2 = -1
 
 
     if x > y:
       if (i == 0) | (x < y0):
-        handsList[type].insert(i, Hand(cards, bid))
+        insertBefore(type, i, cards, bid)
         break
       else:
         i -= 1
         continue
 
-
     if x < y:
       if (i == listLen-1) | (x > y2):
-        handsList[type].insert(i, Hand(cards, bid))
+        insertAfter(type, i, cards, bid)
         break
       else:
         i += 1
         continue
 
-
     if x == y:
+      compxy = compCards(cards, handsList[type][i].cards)
       if listLen > 1:
-        if ((i==0) & (x>y2)) | ((i==listLen-1) & (x<y0)):
-          #compare j
-          if compCards(cards, handsList[type][i].cards) is True:
-            handsList[type].insert(i, Hand(cards, bid))
-          else:
-            try:
-              handsList[type].insert(i+1, Hand(cards, bid))
-            except:
-              handsList[type].append(Hand(cards, bid))
-          break
+        if (compxy is True):  
+          if (x==y0):
+            compxy0 = compCards(cards, handsList[type][i-1].cards)
+            if compxy0 is False:
+              insertBefore(type, i, cards, bid)
+              break
+            else:
+              i -= 1
+              continue
+          if (x < y0) | (i==0):
+            insertBefore(type, i, cards, bid)
+            break
 
-        if (x==y0) | (x==y2):
-          #compare j
-          if compCards(cards, handsList[type][i].cards) is True:
-            i -= 1
-          else:
-            i += 1
-          continue
-
+        if (compxy is False):
+          if (x==y2):
+            compxy2= compCards(cards, handsList[type][i+1].cards)
+            if compxy2 is True:
+              insertAfter(type, i, cards, bid)
+              break
+            else:
+              i += 1
+              continue 
+          if (x > y2):
+            insertAfter(type, i, cards, bid)
+            break
       else:
-        if compCards(cards, handsList[type][i].cards) is True:
-          handsList[type].insert(i, Hand(cards, bid))
+        if compxy is True:
+          insertBefore(type, i, cards, bid)
         else:
-          handsList[type].append(Hand(cards, bid))
+          insertAfter(type, i, cards, bid)
         break
 
-
+#compare cards with the same start
 def compCards(cardsLine: str, cardsDict: str) -> bool:
   for i in range(1, 6):
     x = getNum(cardsLine[i])
@@ -109,7 +110,7 @@ def compCards(cardsLine: str, cardsDict: str) -> bool:
       continue
   return True
 
-
+#get equivalent Rank of Ace, King, Queen, Jack, Ten
 def getNum(c: str):
   cardNum = {
     'A': 14,
@@ -120,6 +121,17 @@ def getNum(c: str):
   }
   return int(c) if c.isnumeric() else cardNum[c]
 
+#insert cards and bid in the list based on order
+def insertBefore(type: int, i: int, cards: str, bid: int):
+  global handsList
+  handsList[type].insert(i, Hand(cards, bid))
+def insertAfter(type: int, i: int, cards: str, bid: int):
+  global handsList
+  try:
+    handsList[type].insert(i+1, Hand(cards, bid))
+  except:
+    handsList[type].append(Hand(cards, bid)) 
+
 
 def main():
   cnt = 0
@@ -127,41 +139,39 @@ def main():
   try:
     input = open(sys.argv[1], 'r')
   except:
-    input = open('test1.txt', 'r')
+    input = open('input.txt', 'r')
 
   for line in input:
     cnt += 1
     cards, bid = line.rstrip().split(' ')
-    #print(cards, bid)
+    #print(cnt, cards, bid)
     
     d = Counter(cards)
     dMaxCnt = max(d.values())
     dLength = len(d)
-    #print(dMaxCnt, dLength)
 
     match dMaxCnt:
       case 5:
-        #re.search(r'(.)\1{4}', line)
         addToRank(5, cards, bid)
+      
       case 4:
         addToRank(4, cards, bid)
+      
       case 3:
         if dLength == 2:
-          #print('fullHouse')
           addToRank(6, cards, bid)
         else:
-          #print('threeOfAKind')
           addToRank(3, cards, bid)
+      
       case 2:
         if dLength == 3:
-          #print('twoPair')
           addToRank(2, cards, bid)
         else:
-          #print('onePair')
           addToRank(1, cards, bid)
+      
       case 1:
-        #print('highCard')
         addToRank(0, cards, bid)
+      
       case _:
         print('Unexpected Err')
   
@@ -170,12 +180,11 @@ def main():
   res = 0
   for type, hands in handsList.items():
     for i in hands:
-      print(type, i.cards, i.bid)
       res += cnt * i.bid
       cnt -= 1
-      print(cnt, res)
   
   print(res)
+
 
 if __name__ == "__main__":
   main()
