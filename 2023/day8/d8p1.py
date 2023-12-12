@@ -66,7 +66,7 @@ def main():
     step = searchNode(step)
 
   print(stepCnt)
-  #7766929, 528.324
+
 if __name__ == "__main__":
   main()
     
