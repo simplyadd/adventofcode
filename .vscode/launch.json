@@ -9,7 +9,7 @@
       "cwd": "${fileDirname}"
     },
     {
-      "name": "Python Debugger: [test.txt]",
+      "name": "[test.txt]",
       "type": "debugpy",
       "request": "launch",
       "program": "${file}",
@@ -20,7 +20,7 @@
       ]
     },
     {
-      "name": "Python Debugger: [test.txt, DEBUG]",
+      "name": "[test.txt, DEBUG]",
       "type": "debugpy",
       "request": "launch",
       "program": "${file}",

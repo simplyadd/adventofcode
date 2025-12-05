@@ -1,24 +1,40 @@
 import re
 import sys
 
-ranges = []
+def validate_num(num: str) -> bool:
+  lnum = len(num)
+  mid = lnum // 2
 
-class Range:
-  def __init__(self, min: str, max: str):
-    self.min = min
-    self.max = max
+  part1 = num[:mid]
+  part2 = num[mid:]
+  return False if (part1 == part2) else True
 
-  def __repr__(self):
-    return f'Range({self.min}, {self.max})'
+def get_new_num(num: str) -> int:
+  lnum = len(num)
+  mid = lnum // 2
+  if (lnum & 1):
+    # All odd length does not fit the pattern for invalid numbers
+    # Get the next invalid pattern
+    return int(('1' + ('0' * mid)) * 2)
+  else:
+    part1 = num[:mid]
+    part2 = num[mid:]
+    if (part1 == part2):
+      # Already fits the invalid pattern, return as is
+      return int(num)
+    else:
+      # Parse valid pattern and get the next invalid pattern
+      for i in range(mid):
+        if int(part1[i]) == int(part2[i]):
+          continue
 
-def check_pattern(s: str) -> str | None:
-    # The pattern (.+?) captures any sequence of one or more characters
-    # and \1+ checks if that captured group repeats one or more times immediately after.
-    pattern = r'(.+?)\1+'
-    return re.search(pattern, s) is not None
+        if int(part1[i]) < int(part2[i]):
+          pattern = str(int(part1[i]) + 1) + ('0' * (mid-1-i))
+          return int((part1[:i] + pattern) * 2)
+        if int(part1[i]) > int(part2[i]):
+          return int(part1 *2)
 
 def main():
-  global ranges
   invIDs = [] # list of invalid IDs
   sumIDs = 0  # sum of invalid IDs
 
@@ -31,15 +47,25 @@ def main():
 
   for r in line1.split(','):
     l, h = re.findall(r'\d+', r)
-    ranges.append(Range(l, h))
-    
-  if DEBUG_MODE:
-    print(f'\nranges = {ranges}')
-    print(f'\nInvalid IDs = {invIDs}\n')
+
+    curr = int(l)
+    while (curr <= int(h)):
+      if not (validate_num(str(curr))):
+        invIDs.append(curr)
+        sumIDs += curr
+        curr += 1
+      curr = get_new_num(str(curr))
 
   input.close()
-  print(sumIDs)
+  if DEBUG_MODE:
+    print(f'\nInvalid IDs = {invIDs}\n')
+
+  if DEBUG_TEST: # when input file is test.txt
+    print(f'Test Passed: {sumIDs == 1227775554}/1')
+  else:
+    print(sumIDs)
 
 if __name__ == "__main__":
   DEBUG_MODE = 1 if (sys.argv[-1]=='DEBUG') else 0
+  DEBUG_TEST = 1 if (sys.argv[-1]=='DTEST') else 0
   main()
