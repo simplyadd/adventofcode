@@ -19,20 +19,17 @@ def get_new_num(num: str) -> int:
   else:
     part1 = num[:mid]
     part2 = num[mid:]
-    if (part1 == part2):
-      # Already fits the invalid pattern, return as is
-      return int(num)
-    else:
-      # Parse valid pattern and get the next invalid pattern
-      for i in range(mid):
-        if int(part1[i]) == int(part2[i]):
-          continue
 
-        if int(part1[i]) < int(part2[i]):
-          pattern = str(int(part1[i]) + 1) + ('0' * (mid-1-i))
-          return int((part1[:i] + pattern) * 2)
-        if int(part1[i]) > int(part2[i]):
-          return int(part1 *2)
+    if (part1 == part2):
+      return int(num)       # Return invalid pattern as is
+    elif int(part1) > int(part2):
+      return int(part1 * 2) # Return next invalid pattern
+    else:
+      part1_new = str(int(part1) + 1)
+      if lnum == len(part1_new):
+        return int(part1_new + part2)
+      else:
+        return int(num) + 1 # Give up optimizing
 
 def main():
   invIDs = [] # list of invalid IDs
@@ -61,7 +58,7 @@ def main():
     print(f'\nInvalid IDs = {invIDs}\n')
 
   if DEBUG_TEST: # when input file is test.txt
-    print(f'Test Passed: {sumIDs == 1227775554}/1')
+    print(f'Test Passed: {sumIDs == 1227775554}')
   else:
     print(sumIDs)
 
