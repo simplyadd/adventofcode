@@ -25,11 +25,7 @@ def get_new_num(num: str) -> int:
     elif int(part1) > int(part2):
       return int(part1 * 2) # Return next invalid pattern
     else:
-      part1_new = str(int(part1) + 1)
-      if lnum == len(part1_new):
-        return int(part1_new + part2)
-      else:
-        return int(num) + 1 # Give up optimizing
+      return int(num) + 1   # Give up optimizing
 
 def main():
   invIDs = [] # list of invalid IDs
@@ -57,12 +53,15 @@ def main():
   if DEBUG_MODE:
     print(f'\nInvalid IDs = {invIDs}\n')
 
-  if DEBUG_TEST: # when input file is test.txt
+  if DEBUG_TEST:   # when input file is test.txt
     print(f'Test Passed: {sumIDs == 1227775554}')
+  elif TEST_INPUT: # when input file is input.txt
+    print(f'Test Passed: {sumIDs == 20223751480}')
   else:
     print(sumIDs)
 
 if __name__ == "__main__":
   DEBUG_MODE = 1 if (sys.argv[-1]=='DEBUG') else 0
   DEBUG_TEST = 1 if (sys.argv[-1]=='DTEST') else 0
+  TEST_INPUT = 1 if (sys.argv[-1]=='INPUT') else 0
   main()
