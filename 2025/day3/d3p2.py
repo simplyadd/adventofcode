@@ -1,13 +1,12 @@
-import re
 import sys
+sys.path.append('../../')
+from parser import *
 
 def main():
   '''Print sum of highest "joltage" received for each power bank.'''
 
   sum = 0
-
-  try:    input = open(sys.argv[1], 'r')
-  except: input = open('input.txt', 'r')
+  input = open(args.file , 'r')
 
   for l in input:
     line = l.rstrip()
@@ -22,15 +21,12 @@ def main():
       max, ind = 0, temp
       inv -= 1
     sum += int(num)
-    if DEBUG_MODE:
-      print(int(num))
+    logger.debug(int(num))
 
   input.close()
-  # when input file is test.txt
-  if DEBUG_TEST: print(f'Test Passed: {sum == 3121910778619}')
-  else: print(f'\n{sum}')
+
+  if (args.file == 'test.txt'): logger.info(f'Test Passed: {sum == 3121910778619}')
+  else: logger.info(sum)
 
 if __name__ == "__main__":
-  DEBUG_MODE = 1 if (sys.argv[-1]=='DEBUG') else 0
-  DEBUG_TEST = 1 if (sys.argv[-1]=='DTEST') else 0
   main()

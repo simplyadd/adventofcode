@@ -9,38 +9,15 @@
       "cwd": "${fileDirname}"
     },
     {
-      "name": "[test.txt]",
+      "name": "[--file=test.txt --log=DEBUG]",
       "type": "debugpy",
       "request": "launch",
       "program": "${file}",
       "console": "integratedTerminal",
       "cwd": "${fileDirname}",
       "args": [
-        "test.txt"
-      ]
-    },
-    {
-      "name": "[test.txt, DEBUG]",
-      "type": "debugpy",
-      "request": "launch",
-      "program": "${file}",
-      "console": "integratedTerminal",
-      "cwd": "${fileDirname}",
-      "args": [
-        "test.txt",
-        "DEBUG"
-      ]
-    },
-    {
-      "name": "[test.txt, DTEST]",
-      "type": "debugpy",
-      "request": "launch",
-      "program": "${file}",
-      "console": "integratedTerminal",
-      "cwd": "${fileDirname}",
-      "args": [
-        "test.txt",
-        "DTEST"
+        "--file=test.txt",
+        "--log=DEBUG"
       ]
     }
   ]
