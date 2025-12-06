@@ -21,7 +21,7 @@ class Invalid_IDs:
 
 inv = Invalid_IDs()
 
-def get_new_num(num: str) -> int:
+def validate_num(num: str) -> int:
   '''
   Updated to not skip odd length numbers (except for a length of 1)
   and return the next invalid number or next number.
@@ -38,14 +38,10 @@ def get_new_num(num: str) -> int:
     # Odd length
     # length = 1: next invalid number is 11
     if lnum == 1: return 11
-    # length = 5 or 7: a pattern of the next repeating number
+    # length = 5 or 7
     elif ((lnum == 5) or (lnum == 7)):
       new_text = re.sub(num[0], '', num)
       if (new_text == ''): inv.add_id(inum)
-      c = num[0]
-      if c != '9':
-        pattern = str(int(c) + 1)
-        return int(pattern * lnum)
     # length = 9+ (odd only)
     else:
       tri = lnum // 3
@@ -88,7 +84,7 @@ def main():
 
     curr = int(l)
     while (curr <= int(h)):
-      curr = get_new_num(str(curr))
+      curr = validate_num(str(curr))
 
   input.close()
   if DEBUG_MODE:
