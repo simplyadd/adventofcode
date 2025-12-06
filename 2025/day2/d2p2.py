@@ -1,75 +1,81 @@
 import re
 import sys
 
+class Invalid_IDs:
+  def __init__(self):
+    self.invIDs = []
+    self.sumIDs = 0
 
-# FIXME: Remove this function
-def check_pattern(s: str) -> bool:
-  '''
-  The pattern (.+?) captures any sequence of one or more characters and \1+
-  checks if that captured group repeats one or more times immediately after.
+  def __repr__(self):
+    return f'\nInvalid IDs = {self.invIDs}\n\nSum of Invalid IDs = {self.sumIDs}'
 
-  :param s: string to check for pattern
-  :type s: str
-  :return: True if valid pattern and false if invalid (empty string)
-  :rtype: bool
-  '''
+  def __str__(self):
+    return f'Sum of Invalid IDs = {self.sumIDs}'
 
-  found = re.search(r'(.+?)\1+', s)
-  if (found):
-    # search() returns a match object so it needs to be joined to get str
-    pattern = found.group()
-    new_text = re.sub(pattern, '', s)
-  else:
-    new_text = ''
-  return (new_text != '')
+  def add_id(self, num: int):
+    self.invIDs.append(num)
+    self.sumIDs += num
 
+  def get_sum(self) -> int:
+    return self.sumIDs
+
+inv = Invalid_IDs()
 
 def get_new_num(num: str) -> int:
   '''
   Updated to not skip odd length numbers (except for a length of 1)
-  and return the next likely invalid string.
+  and return the next invalid number or next number.
 
   :param num: Number in string format to parse
   :type num: str
-  :return: Next likely invalid string
+  :return: Next invalid number or next number
   :rtype: int
   '''
 
-  lnum = len(num)
-  if lnum == 1:
-    return 11
-  elif (lnum & 1):
-    tri = lnum // 3
-    part1 = num[:tri]
-    part2 = num[tri:tri*2]
-    part3 = num[tri*2:]
+  inum, lnum= int(num), len(num)
 
-    if (part1 == part2 == part3):
-      return int(num)       # Return invalid pattern as is
-    if ((int(part1) > int(part2)) or
-        (int(part1) > int(part3))):
-      return int(part1 * 3) # Return next invalid pattern
+  if (lnum & 1):
+    # Odd length
+    # length = 1 are all valid so return 11 as the next invalid number
+    if lnum == 1: return 11
+    # length = 5 or 7 will return a pattern of the next repeating number
+    elif ((lnum == 5) or (lnum == 7)):
+      new_text = re.sub(num[0], '', num)
+      if (new_text == ''): inv.add_id(inum)
+      c = num[0]
+      if c != '9':
+        pattern = str(int(c) + 1)
+        return int(pattern * lnum)
+    # length = 9+ (odd only)
+    else:
+      tri = lnum // 3
+      part1 = num[:tri]
+      part2 = num[tri:tri*2]
+      part3 = num[tri*2:]
+
+      if (part1 == part2 == part3): inv.add_id(inum)
+      elif (int(part1) > int(part2)): return int(part1 * 3) # Return next invalid pattern
   else:
+    # Even length
     mid   = lnum // 2
     part1 = num[:mid]
     part2 = num[mid:]
 
-    if (part1 == part2):
-      return int(num)       # Return invalid pattern as is
-    if int(part1) > int(part2):
-      return int(part1 * 2) # Return next invalid pattern
-
-  return int(num) + 1   # Give up optimizing
-
+    if (part1 == part2): inv.add_id(inum)
+    elif ((mid & 1) and (mid != 1)):
+      # If half length is odd, check if first two characters are repeating
+      cc = num[:2]
+      new_text = re.sub(cc, '', num)
+      if (new_text == ''):
+        inv.add_id(inum)
+    elif (int(part1) > int(part2)): return int(part1 * 2) # Return next invalid pattern
+  return (inum + 1) # Give up optimizing
 
 def main():
   '''
   Print the sum of all invalid IDs from a list of ranges.
   Invalid IDs are numbers with a repeating pattern.
   '''
-
-  invIDs = [] # list of invalid IDs
-  sumIDs = 0  # sum of invalid IDs
 
   try:
     input = open(sys.argv[1], 'r')
@@ -83,20 +89,15 @@ def main():
 
     curr = int(l)
     while (curr <= int(h)):
-      if not (check_pattern(str(curr))):
-        invIDs.append(curr)
-        sumIDs += curr
-        curr += 1
       curr = get_new_num(str(curr))
 
   input.close()
   if DEBUG_MODE:
-    print(f'\nInvalid IDs = {invIDs}\n')
-
-  if DEBUG_TEST: # when input file is test.txt
-    print(f'Test Passed: {sumIDs == 4174379265}')
+    print(repr(inv))
+  elif DEBUG_TEST: # when input file is test.txt
+    print(f'Test Passed: {inv.get_sum() == 4174379265}')
   else:
-    print(sumIDs)
+    print(inv)
 
 if __name__ == "__main__":
   DEBUG_MODE = 1 if (sys.argv[-1]=='DEBUG') else 0

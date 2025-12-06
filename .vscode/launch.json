@@ -30,6 +30,18 @@
         "test.txt",
         "DEBUG"
       ]
+    },
+    {
+      "name": "[test.txt, DTEST]",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "cwd": "${fileDirname}",
+      "args": [
+        "test.txt",
+        "DTEST"
+      ]
     }
   ]
 }
