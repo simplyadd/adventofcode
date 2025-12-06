@@ -36,9 +36,9 @@ def get_new_num(num: str) -> int:
 
   if (lnum & 1):
     # Odd length
-    # length = 1 are all valid so return 11 as the next invalid number
+    # length = 1: next invalid number is 11
     if lnum == 1: return 11
-    # length = 5 or 7 will return a pattern of the next repeating number
+    # length = 5 or 7: a pattern of the next repeating number
     elif ((lnum == 5) or (lnum == 7)):
       new_text = re.sub(num[0], '', num)
       if (new_text == ''): inv.add_id(inum)
@@ -66,8 +66,7 @@ def get_new_num(num: str) -> int:
       # If half length is odd, check if first two characters are repeating
       cc = num[:2]
       new_text = re.sub(cc, '', num)
-      if (new_text == ''):
-        inv.add_id(inum)
+      if (new_text == ''): inv.add_id(inum)
     elif (int(part1) > int(part2)): return int(part1 * 2) # Return next invalid pattern
   return (inum + 1) # Give up optimizing
 
