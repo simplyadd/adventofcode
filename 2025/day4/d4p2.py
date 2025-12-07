@@ -26,17 +26,9 @@ def count_adjacent(line: str, start: int) -> int:
       adj += 1
   return adj
 
-
-def find_rolls(line: str):
+def find_rolls(line: str) -> str:
   global total
-  for roll in re.finditer(r'@', line):
-    index = roll.start() # Returns index of matched str
-    found = check_if_accessible(index)
-    if (found): total += 1
-  return
 
-def find_rolls_dbg(line: str):
-  global total
   test  = ''
   for i, c in enumerate(line):
     if (c == '@'): found = check_if_accessible(i)
@@ -44,39 +36,43 @@ def find_rolls_dbg(line: str):
 
     if (found):
       total += 1
-      test += 'x'
-    else: test += line[i]
+      test += '.'
+    else: test += str(line[i])
   logger.debug(test)
-  return
+  return test
 
 def main():
-  global threeLines
-  global total
+  global threeLines, total
+  r = 0 # file position for reading the file
 
   logger.debug('----------DEBUG MODE START----------')
-  input = open(args.file, 'r')
 
-  line1 = input.readline()
+  f = open(args.file, 'a+')
+  f.seek(0) # a+ mode starts at the bottom of file.
+  line1 = f.readline()
   threeLines.append(line1.rstrip())
 
-  for line in input:
+  r = r + line_len + 2
+  f.write(('.' * line_len) + '\n')
+  f.seek(r) # go back to correct placement
+
+  for line in f:
     threeLines.append(line.rstrip()) # Add new index
     threeLines.pop(0)                # Keep length at 3
 
-    # Iterates through the whole string when debugging
-    find_rolls_dbg(threeLines[1]) if (log_level==logging.DEBUG) else find_rolls(threeLines[1])
+    new_line = find_rolls(threeLines[1])
+    r = r + line_len + 2
+    f.write(new_line + '\n')
+    f.seek(r) # go back to correct placement
 
-  # For last line
-  threeLines.pop(0)
-  find_rolls_dbg(threeLines[1]) if (log_level==logging.DEBUG) else find_rolls(threeLines[1])
-
-  input.close()
+  f.close()
   logger.debug('----------DEBUG MODE END------------')
   logger.info(total)
 
 if __name__ == "__main__":
   # Get length of first line before starting
-  input = open(args.file, 'r')
-  line_len = len(input.readline().rstrip())
-  input.close()
+  f = open(args.file, 'r')
+  line_len = len(f.readline().rstrip())
+  read_len = len(f.readline())
+  f.close()
   main()
