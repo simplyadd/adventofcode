@@ -1,4 +1,3 @@
-import re
 import sys
 sys.path.append('../../')
 from parser import *
@@ -61,11 +60,6 @@ def parse_file(r_file, w_file):
   threeLines.pop(0)
   new_line = find_rolls(threeLines[1])
   w_file.write(new_line + '\n')
-
-def parse_file_eq(a, b):
-  a.seek(0)
-  b.seek(0)
-  r = 0
 
 def main():
   global threeLines
