@@ -41,31 +41,63 @@ def find_rolls(line: str) -> str:
   logger.debug(test)
   return test
 
+def parse_file(r_file, w_file):
+  global threeLines
+
+  r_file.seek(0)
+  w_file.seek(0)
+  w_file.truncate(0)
+
+  line1 = r_file.readline()
+  threeLines.append(line1.rstrip())
+
+  for line in r_file:
+    threeLines.append(line.rstrip()) # Add new index
+    threeLines.pop(0)                # Keep length at 3
+    new_line = find_rolls(threeLines[1])
+    w_file.write(new_line + '\n')
+  # For last line
+  threeLines.pop(0)
+  new_line = find_rolls(threeLines[1])
+  w_file.write(new_line + '\n')
+  threeLines.append('')
+
+def parse_file_eq(f1, f2):
+  r = 0
+
+  for l1 in f1:
+    r = r + line_len + 2
+    f2.seek(r)
+    l2 = f2.readline()
+    if (l1 != l2):
+      return True
+  return False
+
 def main():
-  global threeLines, total
+  global threeLines
+  global total
   r = 0 # file position for reading the file
 
   logger.debug('----------DEBUG MODE START----------')
 
-  f = open(args.file, 'a+')
-  f.seek(0) # a+ mode starts at the bottom of file.
-  line1 = f.readline()
-  threeLines.append(line1.rstrip())
+  f = open(args.file, 'r')
+  f0 = open("t0.txt", 'w+')
+  f1 = open("t1.txt", 'w+')
+  f2 = open("t2.txt", 'w+')
 
-  r = r + line_len + 2
-  f.write(('.' * line_len) + '\n')
-  f.seek(r) # go back to correct placement
+  parse_file(f, f1)
 
-  for line in f:
-    threeLines.append(line.rstrip()) # Add new index
-    threeLines.pop(0)                # Keep length at 3
-
-    new_line = find_rolls(threeLines[1])
-    r = r + line_len + 2
-    f.write(new_line + '\n')
-    f.seek(r) # go back to correct placement
+  files_not_eq = True
+  while (files_not_eq):
+    parse_file(f1, f0)
+    parse_file(f2, f1)
+    parse_file(f0, f2)
+    files_not_eq = parse_file_eq(f1, f2)
 
   f.close()
+  f0.close()
+  f1.close()
+  f2.close()
   logger.debug('----------DEBUG MODE END------------')
   logger.info(total)
 
@@ -73,6 +105,5 @@ if __name__ == "__main__":
   # Get length of first line before starting
   f = open(args.file, 'r')
   line_len = len(f.readline().rstrip())
-  read_len = len(f.readline())
   f.close()
   main()
