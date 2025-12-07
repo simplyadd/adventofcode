@@ -19,10 +19,10 @@ For an input of 987654321111111:
  - Part 2 looks for largest "joltages" with a length of 12 (987654321111).
 
 ### [Day 4: total paper rolls with <4 other rolls in 8 adjacent positions](https://adventofcode.com/2025/day/4)
-The order of the string of numbers cannot be rearranged.
+Paper rolls with less than four other paper rolls surrounding it can be moved by a forklift.
 
- - Part 1 Get total paper rolls with <4 other rolls in 8 adjacent position
- - Part 2
+ - Part 1 only needs to look through the input once.
+ - Part 2 parses the input until no paper rolls can be moved.
 
 ### [Day 5: ](https://adventofcode.com/2025/day/5)
  - Part 1

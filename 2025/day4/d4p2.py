@@ -22,7 +22,7 @@ def count_adjacent(line: str, start: int) -> int:
   min = start-1 if (start !=0) else start
   max = start+2 if (start < line_len-1) else line_len
   for i in line[min:max]:
-    if i != '.':
+    if (i == '@'):
       adj += 1
   return adj
 
@@ -36,17 +36,18 @@ def find_rolls(line: str) -> str:
 
     if (found):
       total += 1
-      test += '.'
-    else: test += str(line[i])
+      test += 'x'
+    elif (str(line[i]) == 'x'): test += '.'
+    else:                       test += str(line[i])
   logger.debug(test)
   return test
 
 def parse_file(r_file, w_file):
   global threeLines
 
+  threeLines = ['', '']
   r_file.seek(0)
   w_file.seek(0)
-  w_file.truncate(0)
 
   line1 = r_file.readline()
   threeLines.append(line1.rstrip())
@@ -60,44 +61,37 @@ def parse_file(r_file, w_file):
   threeLines.pop(0)
   new_line = find_rolls(threeLines[1])
   w_file.write(new_line + '\n')
-  threeLines.append('')
 
-def parse_file_eq(f1, f2):
+def parse_file_eq(a, b):
+  a.seek(0)
+  b.seek(0)
   r = 0
-
-  for l1 in f1:
-    r = r + line_len + 2
-    f2.seek(r)
-    l2 = f2.readline()
-    if (l1 != l2):
-      return True
-  return False
 
 def main():
   global threeLines
   global total
-  r = 0 # file position for reading the file
 
   logger.debug('----------DEBUG MODE START----------')
 
   f = open(args.file, 'r')
-  f0 = open("t0.txt", 'w+')
-  f1 = open("t1.txt", 'w+')
-  f2 = open("t2.txt", 'w+')
+  a = open("t1.txt", 'w+')
+  b = open("t2.txt", 'w+')
 
-  parse_file(f, f1)
+  parse_file(f, a)
 
-  files_not_eq = True
-  while (files_not_eq):
-    parse_file(f1, f0)
-    parse_file(f2, f1)
-    parse_file(f0, f2)
-    files_not_eq = parse_file_eq(f1, f2)
+  while (True):
+    temp = total
+    logger.debug('a->b')
+    parse_file(a, b)
+    logger.debug('b->a')
+    parse_file(b, a)
+    if total == temp:
+      break
 
   f.close()
-  f0.close()
-  f1.close()
-  f2.close()
+  a.close()
+  b.close()
+
   logger.debug('----------DEBUG MODE END------------')
   logger.info(total)
 
