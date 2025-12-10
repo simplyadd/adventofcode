@@ -9,6 +9,17 @@
       "cwd": "${fileDirname}"
     },
     {
+      "name": "[DEBUG]",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "cwd": "${fileDirname}",
+      "args": [
+        "--log=DEBUG"
+      ]
+    },
+    {
       "name": "[test.txt DEBUG]",
       "type": "debugpy",
       "request": "launch",
