@@ -24,12 +24,14 @@ Paper rolls with less than four other paper rolls surrounding it can be moved by
  - Part 1 only needs to look through the input once.
  - Part 2 parses the input until no paper rolls can be moved.
 
-### [Day 5: ](https://adventofcode.com/2025/day/5)
- - Part 1
- - Part 2
-### [Day 6: ](https://adventofcode.com/2025/day/6)
- - Part 1
- - Part 2
+### [Day 5: total number of fresh fruit](https://adventofcode.com/2025/day/5)
+ - Part 1 gets total number of rotten fruits (numbers not within any of the list of ranges).
+ - Part 2 gets total number of possible fresh fruits IDs.
+
+### [Day 6: "cephalopods math"](https://adventofcode.com/2025/day/6)
+ - Part 1 gets the sum of the problems solved like an adding machine.
+ - Part 2 is solved similarly but the numbers are read from top to bottom.
+
 ### [Day 7: ](https://adventofcode.com/2025/day/7)
  - Part 1
  - Part 2
