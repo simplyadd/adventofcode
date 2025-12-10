@@ -10,7 +10,7 @@ class Range:
     self.next = None
 
   def __repr__(self):
-    return f'Range({self.low}, {self.high}, {self.next})'
+    return f'{self.low}-{self.high}'
 
 def main():
   '''"Just put the fruits in the bag" method
@@ -18,17 +18,15 @@ def main():
   A.K.A no optimizations such as combining the range of lists
   or ordering the ranges from smallest to largest'''
 
+  ranges = Range (0, 0)
   total = 0  # Total fresh fruits
 
   f = open(args.file, 'r')
   l = f.readline()
-
-  # # Initialize low and high with first line
-  # line = l.rstrip()
-  # try:    low, high =line.split('-')
-  # except: low, high = line, line
-
-  # ranges = Range(int(low), int(high))
+  line = l.rstrip()
+  a, b = line.split('-')
+  a, b = int(a), int(b)
+  ranges = Range(a, b)
 
   while (l != '\n'):
     line = l.rstrip()
@@ -36,40 +34,49 @@ def main():
     except: a, b = line, line
 
     a, b = int(a), int(b)
-    try: curr = ranges
-    except:
-      ranges = Range(a, b)
-      l = f.readline()
-      continue
     temp = Range(a, b)
+    curr = ranges
 
     while (True):
       if (a >= curr.low):
         if (a <= curr.high):
           # curr.low <= a-b <= curr.high
-          if (b <= curr.high): break
+          if (b <= curr.high):
+            break
           # curr.low <= a   <  curr.high < b
-          if ( (curr.next is None) or
-              ((curr.next is not None) and (b < curr.next.low))):
+          if ((curr.next is None) or (b < curr.next.low)):
             curr.high = b
           else: # b >= curr.next.low
             curr.high = max(curr.next.high, b)
             curr.next = curr.next.next
         elif (curr.next is not None):
-          curr = curr.next
-          continue
-        else: curr.next = temp
+          if ((a > curr.high) and (b < curr.next.low)):
+            temp.prev = curr
+            curr.next = temp
+          else:
+            curr = curr.next
+            continue
+        else:
+          temp.prev = curr
+          curr.next = temp
         break
       # a < curr.low
       elif (b <= curr.high): # a-b <= curr.high
         if (b >= curr.low): # a < curr.low <= b <= curr.high
-          if ( (curr.prev is None) or
-              ((curr.prev is not None) and (a > curr.prev.high))):
+          if ((curr.prev is None) or (a > curr.prev.high)):
               curr.low = a
         elif (curr.prev is not None): # a-b < curr.low <= curr.high
-          curr = curr.prev
-          continue
-        else: curr.prev = temp
+          if ((a > curr.prev.high) and (b < curr.low)):
+            temp.next = curr
+            curr.prev = temp
+            ranges = temp
+          else:
+            curr = curr.prev
+            continue
+        else:
+          temp.next = curr
+          curr.prev = temp
+          ranges = temp
         break
       else:  # a < curr.low < curr.high < b
         curr.low = a
@@ -79,12 +86,13 @@ def main():
 
   curr = ranges
   while curr.next is not None:
+    logger.debug(curr)
     total = total + (curr.high - curr.low + 1)
     curr = curr.next
-  total = total + (curr.high - curr.low + 1) # For the last range
+  logger.debug(curr)
+  total = total + (curr.high - curr.low + 1) # For the final range
 
   f.close()
-  logger.debug(ranges)
   logger.info(total)
 
 if __name__ == "__main__":
