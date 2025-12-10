@@ -13,11 +13,11 @@ class Range:
     return f'{self.low}-{self.high}'
 
 def main():
-  '''"Just put the fruits in the bag" method
+  '''
+  Returns total number IDs of fresh fruit.
 
-  A.K.A no optimizations such as combining the range of lists
-  or ordering the ranges from smallest to largest'''
-
+  Bugs: Does not work for test1.txt and test2.txt test cases.
+  '''
   ranges = Range (0, 0)
   total = 0  # Total fresh fruits
 
@@ -49,34 +49,32 @@ def main():
           else: # b >= curr.next.low
             curr.high = max(curr.next.high, b)
             curr.next = curr.next.next
-        elif (curr.next is not None):
-          if ((a > curr.high) and (b < curr.next.low)):
-            temp.prev = curr
-            curr.next = temp
-          else:
-            curr = curr.next
-            continue
-        else:
+        elif((curr.next is None) or
+             ((a > curr.high) and (b < curr.next.low))):
           temp.prev = curr
+          temp.next = curr.next
           curr.next = temp
+        else:
+          curr = curr.next
+          continue
         break
       # a < curr.low
       elif (b <= curr.high): # a-b <= curr.high
         if (b >= curr.low): # a < curr.low <= b <= curr.high
           if ((curr.prev is None) or (a > curr.prev.high)):
-              curr.low = a
-        elif (curr.prev is not None): # a-b < curr.low <= curr.high
-          if ((a > curr.prev.high) and (b < curr.low)):
-            temp.next = curr
-            curr.prev = temp
-            ranges = temp
-          else:
-            curr = curr.prev
-            continue
-        else:
+            curr.low = a
+          else: # b <= curr.next.low
+            curr.high = min(curr.prev.low, a)
+            curr.prev = curr.prev.prev
+        elif ((curr.prev is None) or
+              ((a > curr.prev.high) and (b < curr.low))):
+          temp.prev = curr.prev
           temp.next = curr
           curr.prev = temp
           ranges = temp
+        else: # a-b < curr.low <= curr.high
+          curr = curr.prev
+          continue
         break
       else:  # a < curr.low < curr.high < b
         curr.low = a
@@ -93,7 +91,14 @@ def main():
   total = total + (curr.high - curr.low + 1) # For the final range
 
   f.close()
-  logger.info(total)
+  if (args.file == 'test.txt'):
+    logger.info(f'Test Passed: {total == 14}')
+    logger.debug(total)
+  elif (args.file == 'test1.txt'):
+    logger.info(f'Test Passed: {total == 202}')
+    logger.debug(total)
+  else:
+    logger.info(total)
 
 if __name__ == "__main__":
   main()
