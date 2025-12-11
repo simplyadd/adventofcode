@@ -6,7 +6,7 @@ def main():
   '''Print sum of highest "joltage" received for each power bank.'''
 
   sum = 0
-  input = open(args.file , 'r')
+  input = open(args.file, 'r')
 
   for l in input:
     line = l.rstrip()
