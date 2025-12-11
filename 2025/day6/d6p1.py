@@ -19,11 +19,10 @@ def main():
   rows = []
   total = 0
 
-  with open(args.file, 'r') as f:
-    lines = f.readlines()
+  f = open(args.file, 'r')
 
   # Transpose file
-  for l in lines:
+  for l in f:
     line = l.strip()
     rows.append(re.split(r'\s+', line))
   columns = list(zip(*rows))

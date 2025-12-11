@@ -18,11 +18,10 @@ def main():
   rows = []
   total = 0
 
-  with open(args.file, 'r') as f:
-    lines = f.readlines()
+  f = open(args.file, 'r')
 
   # Transpose file
-  for line in lines:
+  for line in f:
     rows.append(list(line))
   columns = list(zip(*rows))
 
