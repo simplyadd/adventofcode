@@ -1,18 +1,17 @@
-import re
 import sys
 sys.path.append('../../')
 from parser import *
 
-def get_product(l : list):
+def get_product(nums : list):
   product = 1
-  for elem in l[:-1]:
-    product *= int(elem)
+  for num in nums:
+    product *= int(num)
   return product
 
-def get_sum(l : list):
+def get_sum(nums : list):
   sum = 0
-  for elem in l[:-1]:
-    sum += int(elem)
+  for num in nums:
+    sum += int(num)
   return sum
 
 def main():
@@ -23,19 +22,25 @@ def main():
     lines = f.readlines()
 
   # Transpose file
-  for l in lines:
-    line = l.strip()
-    rows.append(re.split(r'\s+', line))
+  for line in lines:
+    rows.append(list(line))
   columns = list(zip(*rows))
 
-  for col in columns:
-    if col[-1] == '*':
-      total += get_product(col)
-    elif col[-1] == '+':
-      total += get_sum(col)
-
-  logger.debug(rows)
-  logger.debug(columns)
+  nums = []
+  for col in reversed(columns):
+    word = ''.join(col).strip()
+    if word.isnumeric():
+      nums.append(word)
+    elif (word == ''):
+      continue
+    else:
+      nums.append(word[:-1])
+      if col[-1] == '*':
+        total += get_product(nums)
+      elif col[-1] == '+':
+        total += get_sum(nums)
+      logger.debug(f'total {col[-1]}= {nums} = {total}')
+      nums = []
   logger.info(total)
 
 if __name__ == "__main__":

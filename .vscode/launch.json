@@ -30,6 +30,19 @@
         "--file=test.txt",
         "--log=DEBUG"
       ]
+    },
+    {
+      "name": "[test.txt DEBUG (console)]",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "cwd": "${fileDirname}",
+      "args": [
+        "--file=test.txt",
+        "--log=DEBUG",
+        "--console=DEBUG"
+      ]
     }
   ]
 }
