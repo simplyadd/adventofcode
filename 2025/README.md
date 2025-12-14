@@ -32,9 +32,10 @@ Paper rolls with less than four other paper rolls surrounding it can be moved by
  - Part 1 gets the sum of the problems solved like an adding machine.
  - Part 2 is solved similarly but the numbers are read from top to bottom.
 
-### [Day 7: ](https://adventofcode.com/2025/day/7)
- - Part 1
- - Part 2
+### [Day 7: tachyon manifolds](https://adventofcode.com/2025/day/7)
+ - Part 1 gets total number the tachyon manifolds will be split.
+ - Part 2 gets total number of paths given that quantum tachyon manifold only sends a single tachyon particale at a time.
+
 ### [Day 8: ](https://adventofcode.com/2025/day/8)
  - Part 1
  - Part 2
