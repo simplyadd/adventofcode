@@ -36,9 +36,10 @@ Paper rolls with less than four other paper rolls surrounding it can be moved by
  - Part 1 gets total number the tachyon manifolds will be split.
  - Part 2 gets total number of paths given that quantum tachyon manifold only sends a single tachyon particale at a time.
 
-### [Day 8: ](https://adventofcode.com/2025/day/8)
- - Part 1
- - Part 2
+### [Day 8: connect the junction boxes to form circuits](https://adventofcode.com/2025/day/8)
+ - Part 1 gets the product of the top 3 largest circuits.
+ - Part 2 gets the product of the last X coordinates that form one big circuit.
+
 ### [Day 9: ](https://adventofcode.com/2025/day/9)
  - Part 1
  - Part 2
